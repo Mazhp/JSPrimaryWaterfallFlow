@@ -8,55 +8,62 @@ window.onload=function () {
     waterFall('outBox',screenWidth);
 
     //实现向下滚动,无线加载图片
+    var timers=null;
     //监听滚动事件
     window.onscroll=function () {
-        if(willBeLoad()){//需要加载
-            //制造点假数据
-            var dataArr=[
-                {src:'1.jpg'},
-                {src:'5.jpg'},
-                {src:'3.jpg'},
-                {src:'4.jpg'},
-                {src:'2.jpg'},
-                {src:'9.jpg'},
-                {src:'8.jpg'},
-                {src:'6.jpg'},
-                {src:'7.jpg'},
-                {src:'10.jpg'},
-                {src:'12.jpg'},
-                {src:'13.jpg'},
-            ]
-            //遍历数据
-            for(var i=0;i<dataArr.length;i++){
-                //创建一个新的盒子
-                var newBox=document.createElement('div');
-                //新盒子的className为box,和其它的样式一样
-                newBox.className='box';
-                //添加新盒子
-                $('outBox').appendChild(newBox);
-                //创建一个新的pic盒子
-                var newPic=document.createElement('div');
-                //新盒子的className为pic,和其它的样式一样
-                newPic.className='pic';
-                //添加新盒子
-                newBox.appendChild(newPic);
-                //创建一个img标签
-                var newImg=document.createElement('img');
-                //img标签的src是哪个从json数据中取出
-                newImg.src='images/'+dataArr[i].src;
-                //添加新的img标签
-                newPic.appendChild(newImg);
+       clearTimeout(timers);
+        timers=setTimeout(function () {
+            if(willBeLoad()){//需要加载
+                //制造点假数据
+                var dataArr=[
+                    {src:'1.jpg'},
+                    {src:'5.jpg'},
+                    {src:'3.jpg'},
+                    {src:'4.jpg'},
+                    {src:'2.jpg'},
+                    {src:'9.jpg'},
+                    {src:'8.jpg'},
+                    {src:'6.jpg'},
+                    {src:'7.jpg'},
+                    {src:'10.jpg'},
+                    {src:'12.jpg'},
+                    {src:'13.jpg'},
+                ]
+                //遍历数据
+                for(var i=0;i<dataArr.length;i++){
+                    //创建一个新的盒子
+                    var newBox=document.createElement('div');
+                    //新盒子的className为box,和其它的样式一样
+                    newBox.className='box';
+                    //添加新盒子
+                    $('outBox').appendChild(newBox);
+                    //创建一个新的pic盒子
+                    var newPic=document.createElement('div');
+                    //新盒子的className为pic,和其它的样式一样
+                    newPic.className='pic';
+                    //添加新盒子
+                    newBox.appendChild(newPic);
+                    //创建一个img标签
+                    var newImg=document.createElement('img');
+                    //img标签的src是哪个从json数据中取出
+                    newImg.src='images/'+dataArr[i].src;
+                    //添加新的img标签
+                    newPic.appendChild(newImg);
+                }
+                //所有的盒子都创建完成之后,再执行一次瀑布流方法,否则新创建的标签不会实现瀑布流的效果
+                waterFall('outBox',screenWidth);
             }
-            //所有的盒子都创建完成之后,再执行一次瀑布流方法,否则新创建的标签不会实现瀑布流的效果
-            waterFall('outBox',screenWidth);
-        }
+        },200)
     }
-
+    var timer=null;
     window.onresize=function () {//监听窗口改变事件
-        //获取浏览器的宽度
-        screenWidth=document.documentElement.clientWidth||document.body.clientWidth;
-        //重新执行瀑布流方法
-        waterFall('outBox',screenWidth);
+        clearTimeout(timer);
+        timer=setTimeout(function () {
+            //获取浏览器的宽度
+            screenWidth=document.documentElement.clientWidth||document.body.clientWidth;
+            //重新执行瀑布流方法
+            waterFall('outBox',screenWidth);
+        },200)
     }
 
 }
@@ -93,6 +100,7 @@ function waterFall(outBox,screenWidth) {
         boxHeight=allBoxs[i].offsetHeight;
         if(i<cols){//讲第一排的高度放入数组中
             boxHeightArr.push(boxHeight);
+            allBoxs[i].style='';
         }else { //然后将第一排后面的所有的元素放入之前数组中高度最小的那一列
 
            //获取数组中最小的高度
